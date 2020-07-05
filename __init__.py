@@ -22,17 +22,17 @@ class MCP4728Actor(ActorBase):
         address = int(self.address)
         channel = int(self.channel)
 
-        self.dac = mcp4728.MCP4728(self.address)
+        self.dac = mcp4728.MCP4728(address)
         if self.voltage_ref == "Vdd":
-            self.dac.set_vref(self.channel, 0)
+            self.dac.set_vref(channel, 0)
         else:
-            self.dac.set_vref(self.channel, 1)
+            self.dac.set_vref(channel, 1)
             if self.voltage_ref == "Internal 4.096V":
-                self.dac.set_gain(self.channel, 1)
+                self.dac.set_gain(channel, 1)
             else:
-                self.dac.set_gain(self.channel, 0)
+                self.dac.set_gain(channel, 0)
 
-        self.value = self.dac.get_value(self.channel)
+        self.value = self.dac.get_value(channel)
 
     def set_power(self, power):
         """Set the power as a percentage of the range between minimum and maximum power"""
@@ -46,7 +46,7 @@ class MCP4728Actor(ActorBase):
             if idx == int(self.power_actor):
                 power_actor_name = value.name
         for idx, value in cbpi.cache["actors"].iteritems():
-            if idx == int(self.dependency):
+            if idx == int(self.power_actor):
                 if value.state == 0:
                     pass
                 elif value.state == 1:
