@@ -19,6 +19,9 @@ class MCP4728Actor(ActorBase):
     timeout = Property.Number("Notification duration (ms)", True, 5000, description="0ms will disable notifications completely")
 
     def init(self):
+        address = int(self.address)
+        channel = int(self.channel)
+
         self.dac = mcp4728.MCP4728(self.address)
         if self.voltage_ref == "Vdd":
             self.dac.set_vref(self.channel, 0)
@@ -28,12 +31,15 @@ class MCP4728Actor(ActorBase):
                 self.dac.set_gain(self.channel, 1)
             else:
                 self.dac.set_gain(self.channel, 0)
+
         self.value = self.dac.get_value(self.channel)
 
     def set_power(self, power):
         """Set the power as a percentage of the range between minimum and maximum power"""
         self.power = power
         self.value = (4095*power) // 100
+
+        channel = int(self.channel)
 
         power_actor_name = ""
         for idx, value in cbpi.cache["actors"].iteritems():
@@ -48,6 +54,8 @@ class MCP4728Actor(ActorBase):
 
     def off(self):
         """Switch the actor off"""
+        channel = int(self.channel)
+
         if self.power_control == "DAC":
             self.dac.write_value(channel, 0)
         else:
@@ -55,6 +63,8 @@ class MCP4728Actor(ActorBase):
 
     def on(self, power=None):
         """Switch the actor on. Always set the power to the max_power or current power setting."""
+        channel = int(self.channel)
+
         if power:
             self.set_power(power)
 
