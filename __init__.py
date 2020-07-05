@@ -58,7 +58,7 @@ class MCP4728Actor(ActorBase):
         if power:
             self.set_power(power)
 
-        if self.power_control == "DAC"
+        if self.power_control == "DAC":
             self.dac.write_value(channel, self.value)
         else:
             self.api.switch_actor_on(int(self.base))
