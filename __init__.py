@@ -21,8 +21,10 @@ class MCP4728Actor(ActorBase):
                               description="0ms will disable notifications completely")
 
     def init(self):
+        address = int(self.address)
+        channel = int(self.channel)
         #self.dac = mcp4728.MCP4728(self.address)
-        #cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(self.address),
+        cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(self.address),
         #            "DAC Channel {:d}".format(self.channel), timeout=None, type="danger")
         # if self.voltage_ref == "Vdd":
         #     self.dac.set_vref(channel, 0)
