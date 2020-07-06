@@ -22,8 +22,8 @@ class MCP4728Actor(ActorBase):
 
     def init(self):
         #self.dac = mcp4728.MCP4728(self.address)
-        cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(self.address),
-                    "DAC Channel {:d}".format(self.channel), timeout=None, type="danger")
+        #cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(self.address),
+        #            "DAC Channel {:d}".format(self.channel), timeout=None, type="danger")
         # if self.voltage_ref == "Vdd":
         #     self.dac.set_vref(channel, 0)
         # else:
@@ -32,14 +32,15 @@ class MCP4728Actor(ActorBase):
         #         self.dac.set_gain(channel, 1)
         #     else:
         #         self.dac.set_gain(channel, 0)
-
+        pass
         #self.value = self.dac.get_value(self.channel)
-        cbpi.notify("MCP4728 Channel {:d} Value {:d}".format(self.channel, self.value), timeout=None, type="danger")
+        #cbpi.notify("MCP4728 Channel {:d} Value {:d}".format(self.channel, self.value), timeout=None, type="danger")
 
     def set_power(self, power):
         """Set the power as a percentage of the range between minimum and maximum power"""
-        self.power = power
-        self.value = (4095 * power) // 100
+        pass
+        #self.power = power
+        #self.value = (4095 * power) // 100
 
         # power_actor_name = ""
         # for idx, value in cbpi.cache["actors"].iteritems():
@@ -54,10 +55,12 @@ class MCP4728Actor(ActorBase):
 
     def off(self):
         """Switch the actor off"""
-        channel = int(self.channel)
+        pass
+        #channel = int(self.channel)
 
         #self.dac.write_value(channel, 0)
 
     def on(self, power=None):
         """Switch the actor on. Set the power to the given value or the current power setting."""
+        pass
         #self.dac.write_value(self.channel, self.value)
