@@ -23,6 +23,7 @@ class MCP4728Actor(ActorBase):
         channel = int(self.channel)
 
         self.dac = mcp4728.MCP4728(address)
+        cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(self.address), "DAC Channel {:d}".format(self.channel), timeout=None, type="danger")
         if self.voltage_ref == "Vdd":
             self.dac.set_vref(channel, 0)
         else:
@@ -33,6 +34,7 @@ class MCP4728Actor(ActorBase):
                 self.dac.set_gain(channel, 0)
 
         self.value = self.dac.get_value(channel)
+        cbpi.notify("MCP4728 Channel {:d} Value {:d}".format(self.channel, self.value), timeout=None, type="danger")
 
     def set_power(self, power):
         """Set the power as a percentage of the range between minimum and maximum power"""
@@ -62,7 +64,7 @@ class MCP4728Actor(ActorBase):
             self.api.switch_actor_off(int(self.power_actor))
 
     def on(self, power=None):
-        """Switch the actor on. Always set the power to the max_power or current power setting."""
+        """Switch the actor on. Set the power to the given value or the current power setting."""
         channel = int(self.channel)
 
         if power:
