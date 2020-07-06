@@ -21,7 +21,7 @@ class MCP4728Actor(ActorBase):
                               description="0ms will disable notifications completely")
 
     def init(self):
-        self.dac = mcp4728.MCP4728(self.address)
+        #self.dac = mcp4728.MCP4728(self.address)
         cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(self.address),
                     "DAC Channel {:d}".format(self.channel), timeout=None, type="danger")
         # if self.voltage_ref == "Vdd":
@@ -33,7 +33,7 @@ class MCP4728Actor(ActorBase):
         #     else:
         #         self.dac.set_gain(channel, 0)
 
-        self.value = self.dac.get_value(self.channel)
+        #self.value = self.dac.get_value(self.channel)
         cbpi.notify("MCP4728 Channel {:d} Value {:d}".format(self.channel, self.value), timeout=None, type="danger")
 
     def set_power(self, power):
@@ -50,14 +50,14 @@ class MCP4728Actor(ActorBase):
         #         if value.state == 0:
         #             pass
         #         elif value.state == 1:
-        self.dac.write_value(self.channel, self.value)
+        #self.dac.write_value(self.channel, self.value)
 
     def off(self):
         """Switch the actor off"""
         channel = int(self.channel)
 
-        self.dac.write_value(channel, 0)
+        #self.dac.write_value(channel, 0)
 
     def on(self, power=None):
         """Switch the actor on. Set the power to the given value or the current power setting."""
-        self.dac.write_value(self.channel, self.value)
+        #self.dac.write_value(self.channel, self.value)
