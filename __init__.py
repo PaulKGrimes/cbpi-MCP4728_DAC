@@ -38,6 +38,7 @@ class MCP4728Actor(ActorBase):
         #         self.dac.set_gain(channel, 0)
         pass
         self.value = self.dac.get_value(channel)
+        self.power = self.value * 100 // 4095
         cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, self.value), timeout=None)
 
     def set_power(self, power):
