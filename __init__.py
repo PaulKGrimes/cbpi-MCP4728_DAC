@@ -37,8 +37,8 @@ class MCP4728Actor(ActorBase):
         #     else:
         #         self.dac.set_gain(channel, 0)
         pass
-        #self.value = self.dac.get_value(self.channel)
-        #cbpi.notify("MCP4728 Channel {:d} Value {:d}".format(self.channel, self.value), timeout=None, type="danger")
+        self.value = self.dac.get_value(self.channel)
+        cbpi.notify("MCP4728 Channel {:d} Value {:d}".format(self.channel, self.value), timeout=None, type="danger")
 
     def set_power(self, power):
         """Set the power as a percentage of the range between minimum and maximum power"""
