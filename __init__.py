@@ -2,7 +2,7 @@ from modules import cbpi
 from modules.core.props import Property
 from modules.core.hardware import ActorBase
 
-#import mcp4728
+import mcp4728
 
 
 @cbpi.actor
@@ -23,7 +23,7 @@ class MCP4728Actor(ActorBase):
     def init(self):
         address = int(self.address)
         channel = int(self.channel)
-        
+
         self.dac = mcp4728.MCP4728(address)
         cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(address),
                     "DAC Channel {:d}".format(channel), timeout=None, type="danger")
