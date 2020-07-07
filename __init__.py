@@ -25,8 +25,9 @@ class MCP4728Actor(ActorBase):
         channel = int(self.channel)
 
         self.dac = mcp4728.MCP4728(address)
-        cbpi.notify("Connected to MCP4728", "DAC Address {:d}".format(address),
-                    "DAC Channel {:d}".format(channel), timeout=None, type="danger")
+        cbpi.notify("Connected to MCP4728",
+                    "DAC Address {:d}\nDAC Channel {:d}".format(address, channel),
+                    timeout=None, type="danger")
         # if self.voltage_ref == "Vdd":
         #     self.dac.set_vref(channel, 0)
         # else:
