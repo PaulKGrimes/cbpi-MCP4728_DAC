@@ -64,11 +64,11 @@ class MCP4728Actor(ActorBase):
 
     def off(self):
         """Switch the actor off"""
+        channel = int(self.channel)
+
         if self.power_ctrl == "Actor":
             self.api.switch_actor_off(int(self.power_actor))
         else:
-            channel = int(self.channel)
-
             self.dac.set_value(channel, 0)
 
         value = self.dac.get_value(channel)
@@ -76,10 +76,11 @@ class MCP4728Actor(ActorBase):
 
     def on(self, power=None):
         """Switch the actor on. Set the power to the given value or the current power setting."""
+        channel = int(self.channel)
+
         if self.power_ctrl == "Actor":
             self.api.switch_actor_on(int(self.power_actor))
         else:
-            channel = int(self.channel)
             self.dac.set_value(channel, self.value)
 
         value = self.dac.get_value(channel)
