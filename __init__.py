@@ -34,11 +34,11 @@ class MCP4728Actor(ActorBase):
                     "DAC Address {:d}: DAC Channel {:d}".format(address, channel),
                     timeout=None)
 
-        if self.voltage_ref == "Vdd":
+        if self.volt_ref == "Vdd":
             self.dac.set_vref(channel, 0)
         else:
             self.dac.set_vref(channel, 1)
-            if self.voltage_ref == "Internal 4.096V":
+            if self.volt_ref == "Internal 4.096V":
                 self.dac.set_gain(channel, 1)
             else:
                 self.dac.set_gain(channel, 0)
