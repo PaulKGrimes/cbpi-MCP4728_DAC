@@ -80,8 +80,8 @@ class MCP4728Actor(ActorBase):
 
         if self.power_ctrl == "Actor":
             self.api.switch_actor_on(int(self.power_actor))
-        else:
-            self.dac.set_value(channel, self.value)
+
+        self.dac.set_value(channel, self.value)
 
         value = self.dac.get_value(channel)
         cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=None)
