@@ -48,6 +48,7 @@ class MCP4728Actor(ActorBase):
 
         self.value = self.dac.get_value(channel)
         self.power = (self.value * 100) // 4095
+        self.set_power(self.power)
 
         if self.z_debug:
             cbpi.notify("MCP4728 Current Value",
