@@ -46,9 +46,10 @@ class MCP4728Actor(ActorBase):
             else:
                 self.dac.set_gain(channel, 0)
 
-        # CBPI Actor sets UI power to 100 in post_init_callback, called after this method,
+        # CBPI Actor sets UI state to 0 and power to 100 in post_init_callback, called after this method,
         # so set power here to 100
         self.set_power(100)
+        self.state = 0
 
     def set_power(self, power):
         """Set the power as a percentage of the range between minimum and maximum power"""
@@ -78,6 +79,7 @@ class MCP4728Actor(ActorBase):
         else:
             self.dac.set_value(channel, 0)
 
+        self.state = 0
         if self.z_debug:
             value = self.dac.get_value(channel)
             cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
@@ -89,6 +91,7 @@ class MCP4728Actor(ActorBase):
         if self.d_power_ctrl == "Actor":
             self.api.switch_actor_on(int(self.e_power_actor))
 
+        self.state = 1
         if power:
             self.set_power(power)
         else:
