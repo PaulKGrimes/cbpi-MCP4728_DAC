@@ -46,12 +46,12 @@ class MCP4728Actor(ActorBase):
             else:
                 self.dac.set_gain(channel, 0)
 
-        self.value = self.dac.get_value(channel)
-        self.api.actor_power(self.id, (self.value * 100) // 4095)
-
         if self.z_debug:
             cbpi.notify("MCP4728 Current Value",
                         "Channel {:d}: Value {:d}".format(channel, self.value),
+                        timeout=self.timeout)
+            cbpi.notify("MCP4728 Actor Current Power Setting",
+                        "Power {:d}".format(self.power),
                         timeout=self.timeout)
 
     def set_power(self, power):
