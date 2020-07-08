@@ -62,6 +62,8 @@ class MCP4728Actor(ActorBase):
                 pass
             elif self.state == 1:
                 self.dac.set_value(channel, self.value)
+        else:
+            self.dac.set_value(channel, self.value)
 
         if self.z_debug:
             value = self.dac.get_value(channel)
