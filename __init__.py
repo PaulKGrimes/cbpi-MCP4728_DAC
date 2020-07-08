@@ -13,76 +13,90 @@ class MCP4728Actor(ActorBase):
     The on/off state of the actor can be controlled either by setting the DAC output to zero, or using an additional
     actor.
     """
-    address = Property.Select("DAC Address", [0, 1, 2, 3, 4, 5, 6, 7],
+    a_address = Property.Select("DAC Address", [0, 1, 2, 3, 4, 5, 6, 7],
                               description="Minor address of the MCP4728 DAC unit. Use 0 unless you have changed the address manually")
-    channel = Property.Select("Channel", [0, 1, 2, 3],
+    b_channel = Property.Select("Channel", [0, 1, 2, 3],
                               description="DAC channel to use")
-    volt_ref = Property.Select("Reference Voltage", ["Vdd", "Internal 2.048V", "Internal 4.096V"],
+    c_volt_ref = Property.Select("Reference Voltage", ["Vdd", "Internal 2.048V", "Internal 4.096V"],
                                description="Voltage Reference for DAC channel")
-    power_ctrl = Property.Select("Power Control", ["Zero DAC", "Actor"],
+    d_power_ctrl = Property.Select("Power Control", ["Zero DAC", "Actor"],
                                  description="Power control method")
-    power_actor = Property.Actor("Power On/Off Actor", description="Actor to use to control power")
+    e_power_actor = Property.Actor("Power On/Off Actor", description="Actor to use to control power")
     timeout = Property.Number("Notification duration (ms)", True, 5000,
                               description="0ms will disable notifications completely")
+    z_debug = Property.Select("Debug Messages", [0, 1], description="Display debug notifications")
+
 
     def init(self):
-        address = int(self.address)
-        channel = int(self.channel)
+        address = int(self.a_address)
+        channel = int(self.b_channel)
 
         self.dac = mcp4728.MCP4728(address)
-        cbpi.notify("Connected to MCP4728",
+        if z_debug:
+            cbpi.notify("Connected to MCP4728",
                     "DAC Address {:d}: DAC Channel {:d}".format(address, channel),
-                    timeout=None)
+                    timeout=self.timeout)
 
-        if self.volt_ref == "Vdd":
+        if self.c_volt_ref == "Vdd":
             self.dac.set_vref(channel, 0)
         else:
             self.dac.set_vref(channel, 1)
-            if self.volt_ref == "Internal 4.096V":
+            if self.c_volt_ref == "Internal 4.096V":
                 self.dac.set_gain(channel, 1)
             else:
                 self.dac.set_gain(channel, 0)
 
         self.value = self.dac.get_value(channel)
-        cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, self.value), timeout=None)
+        self.power = (self.value * 100) // 4095
+
+        if z_debug:
+            cbpi.notify("MCP4728 Current Value",
+                        "Channel {:d}: Value {:d}".format(channel, self.value),
+                        timeout=self.timeout)
 
     def set_power(self, power):
         """Set the power as a percentage of the range between minimum and maximum power"""
-        channel = int(self.channel)
+        channel = int(self.b_channel)
 
         self.power = power
         self.value = (4095 * power) // 100
 
-        if self.power_ctrl == "Zero DAC":
+        if self.d_power_ctrl == "Zero DAC":
             if self.state == 0:
                 pass
             elif self.state == 1:
                 self.dac.set_value(channel, self.value)
 
-        value = self.dac.get_value(channel)
-        cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=None)
+        if z_debug:
+            value = self.dac.get_value(channel)
+            cbpi.notify("MCP4728 Set Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
 
     def off(self):
         """Switch the actor off"""
-        channel = int(self.channel)
+        channel = int(self.b_channel)
 
-        if self.power_ctrl == "Actor":
-            self.api.switch_actor_off(int(self.power_actor))
+        if self.d_power_ctrl == "Actor":
+            self.api.switch_actor_off(int(self.e_power_actor))
         else:
             self.dac.set_value(channel, 0)
 
-        value = self.dac.get_value(channel)
-        cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=None)
+        if z_debug:
+            value = self.dac.get_value(channel)
+            cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
 
     def on(self, power=None):
         """Switch the actor on. Set the power to the given value or the current power setting."""
-        channel = int(self.channel)
+        channel = int(self.b_channel)
 
-        if self.power_ctrl == "Actor":
-            self.api.switch_actor_on(int(self.power_actor))
+        if self.d_power_ctrl == "Actor":
+            self.api.switch_actor_on(int(self.e_power_actor))
 
-        self.dac.set_value(channel, self.value)
+        if power:
+            self.set_power(power)
+        else:
+            self.dac.set_value(channel, self.value)
 
-        value = self.dac.get_value(channel)
-        cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=None)
+        if z_debug:
+            value = self.dac.get_value(channel)
+            cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
 
