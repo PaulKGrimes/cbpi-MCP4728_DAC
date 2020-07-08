@@ -32,7 +32,7 @@ class MCP4728Actor(ActorBase):
         channel = int(self.b_channel)
 
         self.dac = mcp4728.MCP4728(address)
-        if z_debug:
+        if self.z_debug:
             cbpi.notify("Connected to MCP4728",
                     "DAC Address {:d}: DAC Channel {:d}".format(address, channel),
                     timeout=self.timeout)
@@ -49,7 +49,7 @@ class MCP4728Actor(ActorBase):
         self.value = self.dac.get_value(channel)
         self.power = (self.value * 100) // 4095
 
-        if z_debug:
+        if self.z_debug:
             cbpi.notify("MCP4728 Current Value",
                         "Channel {:d}: Value {:d}".format(channel, self.value),
                         timeout=self.timeout)
@@ -67,7 +67,7 @@ class MCP4728Actor(ActorBase):
             elif self.state == 1:
                 self.dac.set_value(channel, self.value)
 
-        if z_debug:
+        if self.z_debug:
             value = self.dac.get_value(channel)
             cbpi.notify("MCP4728 Set Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
 
@@ -80,7 +80,7 @@ class MCP4728Actor(ActorBase):
         else:
             self.dac.set_value(channel, 0)
 
-        if z_debug:
+        if self.z_debug:
             value = self.dac.get_value(channel)
             cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
 
@@ -96,7 +96,7 @@ class MCP4728Actor(ActorBase):
         else:
             self.dac.set_value(channel, self.value)
 
-        if z_debug:
+        if self.z_debug:
             value = self.dac.get_value(channel)
             cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
 
