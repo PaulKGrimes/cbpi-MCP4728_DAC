@@ -62,7 +62,7 @@ class MCP4728Actor(ActorBase):
         channel = int(self.b_channel)
 
         self.power = power
-        self.value = (4095 * power) // 100
+        self.value = int((4095 * power) / 100)
 
         if self.d_power_ctrl == "Zero DAC":
             if self.state == 0:
