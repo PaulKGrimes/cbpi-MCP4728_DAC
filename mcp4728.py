@@ -136,7 +136,7 @@ class MCP4728(object):
         self._bus.write_i2c_block_data(self._dev_address, first, [second, third])
 
     def _multi_write(self):
-        """MultiWrite input register values - All DAC ouput update. refer to DATASHEET 5.6.2
+        """MultiWrite input register values - All DAC output update. refer to DATASHEET 5.6.2
         DAC Input, Gain, Vref and PowerDown bits update
         No EEPROM update"""
         block = []
@@ -151,7 +151,7 @@ class MCP4728(object):
         self._bus.write_i2c_block_data(self._dev_address, block[0], block[1:])
 
     def _seq_write(self, start_channel=0):
-        """Sequential Write ALL input register values - All DAC ouput update. refer to DATASHEET 5.6.2
+        """Sequential Write ALL input register values - All DAC output update. refer to DATASHEET 5.6.2
         DAC Input, Gain, Vref and PowerDown bits update
         EEPROM is updated.
 
