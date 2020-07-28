@@ -24,14 +24,14 @@ class MCP4728Actor(ActorBase):
     e_power_actor = Property.Actor("Power On/Off Actor", description="Actor to use to control power")
     timeout = Property.Number("Notification duration (ms)", True, 1000,
                               description="0ms will disable notifications completely")
-    z_debug = Property.Select("Debug Messages", [False, True], description="Display debug notifications")
+    z_debug = Property.Select("Debug Messages", ["Off", "On"], description="Display debug notifications")
 
     def init(self):
         address = int(self.a_address)
         channel = int(self.b_channel)
 
         self.dac = mcp4728.MCP4728(address)
-        if self.z_debug:
+        if self.z_debug == "On":
             cbpi.notify("Connected to MCP4728",
                         "DAC Address {:d}: DAC Channel {:d}".format(address, channel),
                         timeout=self.timeout)
@@ -71,7 +71,7 @@ class MCP4728Actor(ActorBase):
         else:
             self.dac.set_value(channel, self.value)
 
-        if self.z_debug:
+        if self.z_debug == "On":
             value = self.dac.get_value(channel)
             cbpi.notify("MCP4728 Set Value", "Channel {:d}: Value {:d}".format(channel, value), timeout=self.timeout)
 
@@ -85,7 +85,7 @@ class MCP4728Actor(ActorBase):
             self.dac.set_value(channel, 0)
 
         self.state = 0
-        if self.z_debug:
+        if self.z_debug == "On":
             value = self.dac.get_value(channel)
             cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value),
                         timeout=self.timeout)
@@ -103,7 +103,7 @@ class MCP4728Actor(ActorBase):
         else:
             self.dac.set_value(channel, self.value)
 
-        if self.z_debug:
+        if self.z_debug == "On":
             value = self.dac.get_value(channel)
             cbpi.notify("MCP4728 Current Value", "Channel {:d}: Value {:d}".format(channel, value),
                         timeout=self.timeout)
